@@ -16,9 +16,9 @@ RUN rm -rf package-lock.json \
 RUN cd ./web \
     && rm -rf package-lock.json \
     && rm -rf node_modules \
-    && npm config set registry "https://registry.npm.taobao.org/" \
     && npm install 
+    && cd ../
 
 RUN  chmod -R 777 ./web
 EXPOSE 3000 3001
-CMD ["pm2","start" ,"./web/bin/www","./app.js"]
+CMD ["pm2","start" ,"./app.js"]
