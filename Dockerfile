@@ -21,4 +21,4 @@ RUN cd ./web \
 
 RUN  chmod -R 777 ./web
 EXPOSE 3000 3001
-CMD ["node","./app.js"]
+CMD ["pm2","start" ,"./web/bin/www","./app.js","&&","pm2","monit"]
