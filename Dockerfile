@@ -16,7 +16,7 @@ RUN rm -rf package-lock.json \
 RUN cd ./web \
     && rm -rf package-lock.json \
     && rm -rf node_modules \
-    && npm install 
+    && npm install \
     && cd ../
 
 RUN  chmod -R 777 ./web
