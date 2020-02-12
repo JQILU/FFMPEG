@@ -10,7 +10,7 @@ RUN rm -rf package-lock.json \
     && npm config set registry "https://registry.npm.taobao.org/" \
     && npm install 
 EXPOSE 3001
-CMD ["nohup","node","./app.js"]
+CMD ["nohup","node","./app.js","&"]
 
 FROM node:lts-alpine
 WORKDIR /app
@@ -21,4 +21,4 @@ RUN cd ./web \
     && npm config set registry "https://registry.npm.taobao.org/" \
     && npm install 
 EXPOSE 3000
-CMD ["node","./web/bin/www"]
+CMD ["nohup","./web/bin/www","&"]
