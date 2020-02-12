@@ -5,7 +5,8 @@ RUN apt-get install ffmpeg --assume-yes
 
 FROM node:lts-alpine
 WORKDIR /app
-COPY . /appRUN rm -rf package-lock.json \
+COPY . /app
+RUN rm -rf package-lock.json \
     && rm -rf node_modules \
     && npm config set registry "https://registry.npm.taobao.org/" \
     && npm install \
