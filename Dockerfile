@@ -1,3 +1,8 @@
+FROM debian:stretch
+
+RUN apt-get update \
+    && apt-get install ffmpeg
+
 FROM node:lts-alpine
 
 WORKDIR /app
