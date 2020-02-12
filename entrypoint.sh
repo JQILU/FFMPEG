@@ -1,3 +1,3 @@
 nohup node ./web/bin/www &
-nohup node app.js &
+nohup node ./app.js &
 

@@ -12,6 +12,7 @@ RUN rm -f package-lock.json \
     && rm -rf node_modules \
     && npm install \
     && cd ../
+    && chmod 777 ./entrypoint.sh
     
 EXPOSE 3001 3000
 
