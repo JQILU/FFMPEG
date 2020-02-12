@@ -1,9 +1,9 @@
 FROM debian:stretch
 
-RUN apt-get update \
-    && apt-get install ffmpeg \
-    && apt-get install nodejs \
-    && apt-get install npm \
+RUN apt-get update --assume-yes\
+    && apt-get install ffmpeg --assume-yes\
+    && apt-get install nodejs --assume-yes\
+    && apt-get install npm --assume-yes\
     && rm -rf package-lock.json \
     && rm -rf node_modules \
     && npm config set registry "https://registry.npm.taobao.org/" \
