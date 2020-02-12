@@ -1,4 +1,4 @@
-FROM ubuntu:15.04
+FROM debian:stretch
 
 RUN apt-get update \
     && apt-get install ffmpeg \
