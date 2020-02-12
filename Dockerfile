@@ -21,4 +21,4 @@ RUN cd ./web \
     && npm config set registry "https://registry.npm.taobao.org/" \
     && npm install 
 EXPOSE 3000
-CMD ["npm","start"]
+CMD ["node","./web/bin/www"]
