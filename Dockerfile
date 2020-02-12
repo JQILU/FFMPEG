@@ -3,7 +3,8 @@ FROM node:lts-alpine
 WORKDIR /app
 COPY . /app
 
-RUN rm -f package-lock.json \
+RUN chmod 777 ./entrypoint.sh \
+    && rm -f package-lock.json \
     && rm -rf node_modules \
     && npm config set registry "https://registry.npm.taobao.org/" \
     && npm install \
@@ -11,8 +12,7 @@ RUN rm -f package-lock.json \
     && rm -rf package-lock.json \
     && rm -rf node_modules \
     && npm install \
-    && cd ../
-    && chmod 777 ./entrypoint.sh
+    && cd ../ 
     
 EXPOSE 3001 3000
 
