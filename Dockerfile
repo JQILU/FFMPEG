@@ -15,4 +15,4 @@ RUN rm -f package-lock.json \
     
 EXPOSE 3001 3000
 
-CMD nohup sh -c ' node ./web/bin/www && node app.js  '
+ENTRYPOINT ["./entrypoint.sh"]
