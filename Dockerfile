@@ -2,7 +2,7 @@ FROM debian:stretch
 
 RUN apt-get update --assume-yes
 RUN apt-get install ffmpeg --assume-yes
-RUN apt-get install node --assume-yes
+RUN apt-get install nodejs --assume-yes
 RUN apt-get install npm --assume-yes
 RUN rm -rf package-lock.json \
     && rm -rf node_modules \
