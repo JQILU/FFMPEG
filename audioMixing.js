@@ -5,7 +5,7 @@ const uuid = require('node-uuid')
  */
 exports.main = function ({ recordUrl, bgUrl, startTime, durationTime }) {
     const _uuid = uuid.v1()
-    const audioMixinngFile = './audioMixing/' + _uuid + '.mp3'
+    const audioMixinngFile = './web/public/audio' + _uuid + '.mp3'
 
     console.log(recordUrl, bgUrl, startTime, durationTime)
     ffmpeg()
