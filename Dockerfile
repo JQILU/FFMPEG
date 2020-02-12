@@ -10,7 +10,7 @@ RUN rm -f package-lock.json \
     && cd web \
     && rm -f package-lock.json \
     && rm -rf node_modules \
-    && npm install
+    && npm install \
     && cd ../
     
 EXPOSE 3001 3000
