@@ -20,6 +20,6 @@ RUN cd ./web \
     && rm -rf node_modules \
     && npm config set registry "https://registry.npm.taobao.org/" \
     && npm install 
-RUN sudo chmod -R 777 ./web
+RUN  chmod -R 777 ./web
 EXPOSE 3000
 CMD ["nohup","./web/bin/www","&"]
