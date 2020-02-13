@@ -4,7 +4,7 @@ COPY . /app
 
 RUN apt-get update --assume-yes
 RUN apt-get install ffmpeg --assume-yes
-RUN apt-get install curl
+RUN apt-get install curl  --assume-yes
 RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
 RUN apt-get install -y nodejs --assume-yes
 RUN apt-get install -y npm --assume-yes
