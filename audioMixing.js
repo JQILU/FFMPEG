@@ -1,41 +1,54 @@
 const ffmpeg = require('fluent-ffmpeg')
 const uuid = require('node-uuid')
+var http = require('http');
+
 /**
  * 混音处理
  */
-exports.main = function ({ recordUrl, bgUrl, startTime, durationTime }) {
+exports.main = function ({ recordUrl, bgUrlId, startTime, durationTime }) {
     const _uuid = uuid.v1()
-    const audioMixinngFile = './web/public/audio' + _uuid + '.mp3'
 
-    console.log(recordUrl, bgUrl, startTime, durationTime)
-    ffmpeg()
-        .input(bgUrl)
-        .seekInput(startTime)
-        .duration(durationTime)
-        .input(recordUrl)
-        .complexFilter([{
-            filter: 'amix',
-            options: {
-                duration: 'shortest',
-                inputs: 2
-            },
-        }])
-        .on('start', function (commandLine) {
-            console.log('Spawned Ffmpeg with command: ' + commandLine);
+    http.get('http://111.230.161.3:3000/song/url?id=' + bgUrlId, function (res) {
+        res.setEncoding('utf8');
+        let data = ''
+        res.on('data', function (chun) {
+            data += chun
         })
-        .on('codecData', function (data) {
-            console.log('Input is ' + data.audio + ' audio ');
+        res.on('end', function () {
+            const bgUrl = JSON.parse(data).data[0].url
+            const audioMixinngFile = './web/public/audio/' + _uuid + '.mp3'
+            console.log(bgUrl)
+            ffmpeg()
+                .input(bgUrl)
+                .seekInput(startTime)
+                .duration(durationTime)
+                .input(recordUrl)
+                .complexFilter([{
+                    filter: 'amix',
+                    options: {
+                        duration: 'shortest',
+                        inputs: 2
+                    },
+                }])
+                .on('start', function (commandLine) {
+                    console.log('Spawned Ffmpeg with command: ' + commandLine);
+                })
+                .on('codecData', function (data) {
+                    console.log('Input is ' + data.audio + ' audio ');
+                })
+                .on('progress', function (progress) {
+                    console.log('Processing: ' + progress.percent + '% done');
+                })
+                .on('error', function (err, stdout, stderr) {
+                    console.log('Cannot process video: ' + err.message);
+                })
+                .on('end', function (stdout, stderr) {
+                    console.log('Transcoding succeeded!');
+                })
+                .save(audioMixinngFile)
+
         })
-        .on('progress', function (progress) {
-            console.log('Processing: ' + progress.percent + '% done');
-        })
-        .on('error', function (err, stdout, stderr) {
-            console.log('Cannot process video: ' + err.message);
-        })
-        .on('end', function (stdout, stderr) {
-            console.log('Transcoding succeeded!');
-        })
-        .save(audioMixinngFile)
+    })
 
 
     return _uuid
@@ -43,3 +56,4 @@ exports.main = function ({ recordUrl, bgUrl, startTime, durationTime }) {
 
 
 }
+
