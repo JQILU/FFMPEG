@@ -24,6 +24,7 @@ exports.main = function ({ recordUrl, bgUrlId, startTime, durationTime }) {
                     .seekInput(startTime)
                     .duration(durationTime)
                     .input(recordUrl)
+                    .inputOptions("-af 'volume=0.3'")
                     .complexFilter([{
                         filter: 'amix',
                         options: {
@@ -41,6 +42,7 @@ exports.main = function ({ recordUrl, bgUrlId, startTime, durationTime }) {
                         console.log('Processing: ' + progress.percent + '% done');
                     })
                     .on('error', function (err, stdout, stderr) {
+                        console.log(err)
                         reject(err)
                     })
                     .on('end', function (stdout, stderr) {
