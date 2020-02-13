@@ -23,8 +23,8 @@ exports.main = function ({ recordUrl, bgUrlId, startTime, durationTime }) {
                     .input(bgUrl)
                     .seekInput(startTime)
                     .duration(durationTime)
-                    .input(recordUrl)
                     .inputOptions("-af 'volume=0.3'")
+                    .input(recordUrl)
                     .complexFilter([{
                         filter: 'amix',
                         options: {
