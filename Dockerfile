@@ -1,11 +1,11 @@
 FROM debian:stretch
-RUN apt-get update --assume-yes
-RUN apt-get install ffmpeg --assume-yes
-
-FROM node:lts-alpine
 WORKDIR /app
 COPY . /app
 
+RUN apt-get update --assume-yes
+RUN apt-get install ffmpeg --assume-yes
+RUN apt-get install nodejs
+RUN apr-get install npm
 RUN npm install pm2 -g
 
 RUN rm -rf package-lock.json \
