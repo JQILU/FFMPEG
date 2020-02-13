@@ -4,9 +4,9 @@ COPY . /app
 
 RUN apt-get update --assume-yes
 RUN apt-get install ffmpeg --assume-yes
-RUN apt-get install nodejs
-RUN apr-get install npm
-RUN npm install pm2 -g
+RUN apt-get install nodejs --assume-yes
+RUN apr-get install npm --assume-yes
+RUN npm install pm2 -g --assume-yes
 
 RUN rm -rf package-lock.json \
     && rm -rf node_modules \
