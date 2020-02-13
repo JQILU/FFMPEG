@@ -5,11 +5,20 @@ const audioMixing = require('./audioMixing')
 app.use(async ctx => {
     let path = ctx.path;
     if (path === '/audioMixing') {
-        ctx.status = 200
-        ctx.body = {
-            codeMsg: 'success',
-            data: audioMixing.main(ctx.query)
-        }
+        await audioMixing.main(ctx.query).then(data => {
+            ctx.status = 200
+            ctx.body = {
+                codeMsg: 'success',
+                data: data
+            }
+        }).catch(data => {
+            ctx.status = 200
+            ctx.body = {
+                codeMsg: 'error',
+                data: data
+            }
+        })
+
     }
 });
 
