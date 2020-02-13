@@ -4,8 +4,10 @@ COPY . /app
 
 RUN apt-get update --assume-yes
 RUN apt-get install ffmpeg --assume-yes
-RUN apt-get install nodejs --assume-yes
-RUN apt-get install npm --assume-yes
+RUN apt-get install curl
+RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
+RUN apt-get install -y nodejs --assume-yes
+RUN apt-get install -y npm --assume-yes
 RUN npm install pm2 -g --assume-yes
 
 RUN rm -rf package-lock.json \
