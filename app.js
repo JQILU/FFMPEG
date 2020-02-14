@@ -1,6 +1,7 @@
 const Koa = require('koa');
 const app = new Koa();
 const audioMixing = require('./audioMixing')
+const fs = require('fs');
 
 app.use(async ctx => {
     let path = ctx.path;
