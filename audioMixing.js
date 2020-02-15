@@ -2,7 +2,7 @@ const ffmpeg = require('fluent-ffmpeg')
 const uuid = require('node-uuid')
 const http = require('http');
 const child_process = require('child_process');
-
+const fs = require('fs')
 /**
  * 混音处理
  */
@@ -28,7 +28,7 @@ exports.main = function ({ recordUrl, bgUrlId, startTime, durationTime }) {
                 handleBgUrl(bgUrl, outputFile, startTime, durationTime)
                     .then(
                         () => {
-                            execSpleeter(_uuid + '.mp3', outputRoot)
+                            execSpleeter(_uuid + '.mp3', outputRoot, _uuid)
                                 .then(() => {
                                     ffmpegMix(bgMusicSpleeterFile, recordUrl, outputFile)
                                         .then(() => resolve(_uuid))
@@ -66,8 +66,12 @@ function handleBgUrl(bgUrl, bgFile, startTime, durationTime) {
 }
 
 // 处理背景音乐--- 分离伴奏
-function execSpleeter(file, outputFileRoot) {
+function execSpleeter(file, outputFileRoot, uuid) {
     return new Promise((resolve, reject) => {
+        const dir = './web/public/audio/' + outputFileRoot + '/' + uuid
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir);
+        }
         const execPath = 'python -m spleeter separate  -i ' + file + ' -p spleeter:2stems -o ' + outputFileRoot
         console.log(execPath)
         const t = child_process.exec(
