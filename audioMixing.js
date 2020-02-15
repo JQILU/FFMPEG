@@ -21,14 +21,14 @@ exports.main = function ({ recordUrl, bgUrlId, startTime, durationTime }) {
             })
             res.on('end', function () {
                 const bgUrl = JSON.parse(data).data[0].url
-                const bgMusicSpleeterFile = webAudioRoot + outputRoot + '/' + _uuid + '/accompaniment.mp3'
+                const bgMusicSpleeterFile = webAudioRoot + outputRoot + '/' + _uuid + '/accompaniment.wav'
 
                 //处理背景音乐，分理出伴奏
 
                 handleBgUrl(bgUrl, outputFile, startTime, durationTime)
                     .then(
                         () => {
-                            execSpleeter(_uuid + '.mp3', 'output')
+                            execSpleeter(_uuid + '.mp3', outputRoot)
                                 .then(() => {
                                     ffmpegMix(bgMusicSpleeterFile, recordUrl, outputFile)
                                         .then(() => resolve(_uuid))
@@ -68,7 +68,7 @@ function handleBgUrl(bgUrl, bgFile, startTime, durationTime) {
 // 处理背景音乐--- 分离伴奏
 function execSpleeter(file, outputFileRoot) {
     return new Promise((resolve, reject) => {
-        const execPath = 'python -m spleeter separate -c mp3 -i ' + file + ' -p spleeter:2stems -o ' + outputFileRoot
+        const execPath = 'python -m spleeter separate  -i ' + file + ' -p spleeter:2stems -o ' + outputFileRoot
         console.log(execPath)
         const t = child_process.exec(
             execPath,
@@ -92,6 +92,7 @@ function ffmpegMix(bgUrl, recordUrl, outputFile) {
     return new Promise((resolve, reject) => {
         ffmpeg()
             .input(bgUrl)
+            .format('mp3')
             .input(recordUrl)
             .complexFilter([{
                 filter: 'amix',
@@ -104,14 +105,16 @@ function ffmpegMix(bgUrl, recordUrl, outputFile) {
                 console.log('Spawned Ffmpeg with command: ' + commandLine);
             })
             .on('error', function (err, stdout, stderr) {
-                console.log(err)
-                reject(err)
+                console.log(stdout)
+                console.log(stderr)
+                resolve()
             })
             .on('end', function (stdout, stderr) {
+                console.log(stdout)
+                console.log(stderr)
                 resolve()
             })
             .output(outputFile)
-            .outputOption('-y')
             .run()
     })
 }
