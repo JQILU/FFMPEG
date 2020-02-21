@@ -13,7 +13,7 @@ exports.main = function ({ recordUrl, bgUrlId, startTime, durationTime }) {
         const outputRoot = 'output'
         const outputFile = webAudioRoot + _uuid + '.mp3'
 
-        http.get('http://119.29.63.68:30000/song/url?id=' + bgUrlId, function (res) {
+        http.get('http://localhost:3002/song/url?id=' + bgUrlId, function (res) {
             res.setEncoding('utf8');
             let data = ''
             res.on('data', function (chun) {
@@ -47,10 +47,12 @@ exports.main = function ({ recordUrl, bgUrlId, startTime, durationTime }) {
 // 处理背景音乐---裁剪
 function handleBgUrl(bgUrl, bgFile, startTime, durationTime) {
     return new Promise((resolve, reject) => {
+
         ffmpeg()
             .input(bgUrl)
-            .seekInput(startTime)
+            .seek(startTime)
             .duration(durationTime)
+            .audioCodec('libmp3lame')
             .on('start', function (commandLine) {
                 console.log('Spawned Ffmpeg with command: ' + commandLine);
             })
