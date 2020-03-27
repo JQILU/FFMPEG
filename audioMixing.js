@@ -13,7 +13,7 @@ exports.main = function ({ recordUrl, bgUrlId, startTime, durationTime }) {
         const outputRoot = 'output'
         const outputFile = webAudioRoot + _uuid + '.mp3'
 
-        http.get('http://localhost:3002/song/url?id=' + bgUrlId, function (res) {
+        http.get('http://localhost:3000/song/url?id=' + bgUrlId, function (res) {
             res.setEncoding('utf8');
             let data = ''
             res.on('data', function (chun) {
