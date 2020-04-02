@@ -96,7 +96,7 @@ function execSpleeter(file, outputFileRoot, uuid) {
 
 function ffmpegMix(bgUrl, recordUrl, outputFile) {
     return new Promise((resolve, reject) => {
-        const execPath = 'ffmpeg -i '+recordUrl+' -i ' +bgUrl+ ' -filter_complex "[0:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo,volume=0.8[a0]; [1:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo,volume=0.8[a1]; [a0][a1]amerge,pan=stereo|FL < 1.0*FL + 0.707*FC + 0.707*BL|FR < 1.0*FR + 0.707*FC + 0.707*BR [aout]" -map "[aout]" -ac 2 -y '+outputFile;
+        const execPath = 'ffmpeg -i '+recordUrl+' -i ' +bgUrl+ ' -filter_complex "[0:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo,volume=0.8[a0]; [1:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo,volume=0.8[a1]; [a0][a1]amerge,pan=stereo|FL < 1.0*FL + 0.707*FC + 0.707*BL|FR < 1.0*FR + 0.707*FC + 0.707*BR [aout]" -map "[aout]" -ac 2 '+outputFile+' -y';
         console.log(execPath)
         const t = child_process.exec(
             execPath,
