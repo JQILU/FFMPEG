@@ -56,6 +56,7 @@ exports.generateMusic = function ({musicId}){
                 // 服务器已经生成过了，直接返回
                 resolve()
             }else{
+                fs.mkdirSync(musicFileDir)
                 // 从网易云服务器下载文件
                 http.get('http://localhost:3000/song/url?id=' + musicId, function (res) {
                     res.setEncoding('utf8');
@@ -64,6 +65,7 @@ exports.generateMusic = function ({musicId}){
                         data += chun
                     })
                     res.on('end', function () {
+                        console.log(data)
                         const musicUri = JSON.parse(data).data[0].url
                         // 下载原音乐文件
                         downloadFile(musicUri,musicFile).then(function(){
@@ -94,6 +96,7 @@ exports.generateMusic = function ({musicId}){
 
 function downloadFile(uri,filename){
     return new Promise((resolve,reject) => {
+
         const stream = fs.createWriteStream(filename)
         request(uri)
             .pipe(stream)
