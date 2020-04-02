@@ -79,15 +79,16 @@ function execSpleeter(file, outputFileRoot, uuid) {
             execPath,
             { cwd: './web/public/audio', encoding: "utf-8" },
             function (error, stdout, stderr) {
-                resolve()
                 console.log('stdout: ' + stdout);
                 console.log('stderr: ' + stderr);
+                if(!error){
+                    resolve()
+                }else{
+                    reject()
+                }
+               
             }
         )
-
-
-
-
     })
 
 }
@@ -95,28 +96,34 @@ function execSpleeter(file, outputFileRoot, uuid) {
 
 function ffmpegMix(bgUrl, recordUrl, outputFile) {
     return new Promise((resolve, reject) => {
-        ffmpeg()
-            .input(bgUrl)
-            .input(recordUrl)
-            .outputOptions([
-                '-filter_complex "[0:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo,volume=0.8[a0]; [1:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo,volume=1.2[a1]; [a0][a1]amerge,pan=stereo|FL=FC+0.30*FL+0.30*BL|FR=FC+0.30*FR+0.30*BR [aout]"',
-                '-map "[aout]"',
-                '-ac 2'
-            ])
-            .on('start', function (commandLine) {
-                console.log('Spawned Ffmpeg with command: ' + commandLine);
-            })
-            .on('error', function (err, stdout, stderr) {
-                console.log(stdout)
-                console.log(stderr)
-                resolve()
-            })
-            .on('end', function (stdout, stderr) {
-                console.log(stdout)
-                console.log(stderr)
-                resolve()
-            })
-            .output(outputFile)
-            .run()
+        const execPath = 'fmpeg -i '+recordUrl+' -i ' +bgUrl+ ' -filter_complex "[0:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo,volume=0.8[a0]; [1:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo,volume=1.2[a1]; [a0][a1]amerge,pan=stereo|FL=FC+0.30*FL+0.30*BL|FR=FC+0.30*FR+0.30*BR [aout]" -map "[aout]" '+outputFile;
+        console.log(execPath)
+        const t = child_process.exec(
+            execPath,
+            {  encoding: "utf-8" },
+            function (error, stdout, stderr) {
+                console.log('stdout: ' + stdout);
+                console.log('stderr: ' + stderr);
+                if(!error){
+                    resolve()
+                }else{
+                    reject()
+                }
+               
+            }
+        )
+
+        // const execPath = 'python -m spleeter separate  -i ' + file + ' -p spleeter:2stems -o ' + outputFileRoot
+        // console.log(execPath)
+        // const t = child_process.exec(
+        //     execPath,
+        //     { cwd: './web/public/audio', encoding: "utf-8" },
+        //     function (error, stdout, stderr) {
+        //         resolve()
+        //         console.log('stdout: ' + stdout);
+        //         console.log('stderr: ' + stderr);
+        //     }
+        // )
+
     })
 }
