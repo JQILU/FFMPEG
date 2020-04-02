@@ -52,7 +52,6 @@ function handleBgUrl(bgUrl, bgFile, startTime, durationTime) {
             .input(bgUrl)
             .seek(startTime)
             .duration(durationTime)
-            .audioCodec('libmp3lame')
             .on('start', function (commandLine) {
                 console.log('Spawned Ffmpeg with command: ' + commandLine);
             })
@@ -98,15 +97,12 @@ function ffmpegMix(bgUrl, recordUrl, outputFile) {
     return new Promise((resolve, reject) => {
         ffmpeg()
             .input(bgUrl)
-            .format('mp3')
             .input(recordUrl)
-            .complexFilter([{
-                filter: 'amix',
-                options: {
-                    duration: 'shortest',
-                    inputs: 2
-                },
-            }])
+            .outputOptions([
+                '-filter_complex "[0:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo,volume=0.8[a0]; [1:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo,volume=1.2[a1]; [a0][a1]amerge,pan=stereo|FL=FC+0.30*FL+0.30*BL|FR=FC+0.30*FR+0.30*BR [aout]"',
+                '-map "[aout]"',
+                '-ac 2'
+            ])
             .on('start', function (commandLine) {
                 console.log('Spawned Ffmpeg with command: ' + commandLine);
             })
