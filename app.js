@@ -5,8 +5,24 @@ const fs = require('fs');
 
 app.use(async ctx => {
     let path = ctx.path;
-    if (path === '/audioMixing') {
-        await audioMixing.main(ctx.query).then(data => {
+    if (path === '/musicGenerate') {
+        await audioMixing.generateMusic(ctx.query).then(data => {
+            ctx.status = 200
+            ctx.body = {
+                codeMsg: 'success',
+                data: data
+            }
+        }).catch(data => {
+            ctx.status = 200
+            ctx.body = {
+                codeMsg: 'error',
+                data: data
+            }
+        })
+    }
+    
+    if (path === '/audioMix') {
+        await audioMixing.mixAudio(ctx.query).then(data => {
             ctx.status = 200
             ctx.body = {
                 codeMsg: 'success',
@@ -21,6 +37,7 @@ app.use(async ctx => {
         })
 
     }
+    
 });
 
 app.listen(3001);
