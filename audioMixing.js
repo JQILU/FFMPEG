@@ -1,3 +1,4 @@
+
 const uuid = require('node-uuid')
 const http = require('http');
 const child_process = require('child_process');
@@ -11,6 +12,7 @@ exports.main = function ({ recordUrl, bgUrlId, startTime, durationTime }) {
         const webAudioRoot = './web/public/audio/'
         const outputFile = webAudioRoot + _uuid + '.mp3'
         const accompanyFile = webAudioRoot + _uuid + 'accompany.mp3'
+        const tempFile = webAudioRoot + _uuid + 'temp.mp3'
         // 从网易云服务器下载文件
         http.get('http://localhost:3000/song/url?id=' + bgUrlId, function (res) {
             res.setEncoding('utf8');
@@ -21,11 +23,13 @@ exports.main = function ({ recordUrl, bgUrlId, startTime, durationTime }) {
             res.on('end', function () {
                 const musicUri = JSON.parse(data).data[0].url
                 // 处理伴奏
-                const execPath_1 = 'ffmpeg -i '+ musicUri +' -ss '+startTime + ' -t ' + durationTime + ' -af pan="stereo|c0=c0|c1=-1*c1" -ac 1 -y ' + accompanyFile;
-                process(execPath_1).then(()=>{
+                const command_1 = 'ffmpeg -i '+ musicUri +' -ss '+startTime + ' -t ' + durationTime + ' -af pan="stereo|c0=c0|c1=-1*c1" -ac 1 -y ' + accompanyFile;
+                const command_2 = 'ffmpeg -i ' + recordUrl + ' -i ' + accompanyFile +' -i ' + recordUrl + ' -filter_complex "[0:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=mono,volume=0.8[a0],aecho=0.8:0.88:60:0.4; [1:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo,volume=0.5[a1]; [a0][a1]amerge=inputs=2[aout] " -map "[aout]" -ac 2  -y ' + tempFile
+                const command_3 = 'ffmpeg -i ' + tempFile + ' -filter_complex "aecho=0.8:0.88:60:0.4" ' + outputFile;
+                const execCommand = command_1 + ' && ' + command_2 + ' && ' + command_3
+                process(execCommand).then(()=>{
                     // 混音合成
-                    const execPath_2 = 'ffmpeg -i ' + recordUrl + ' -i ' + accompanyFile +' -i ' + recordUrl + ' -filter_complex "[0:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=mono,volume=2.0[a0],aecho=0.8:0.88:60:0.4; [1:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo,volume=1.8[a1]; [a0][a1]amerge=inputs=2[aout] " -map "[aout]" -ac 2  -y ' + outputFile
-                    process(execPath_2).then(() => {resolve(_uuid)}).catch(() => {reject()})
+                    resolve(_uuid)
                 }).catch(()=>{reject()})
             })
         })
