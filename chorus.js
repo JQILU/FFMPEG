@@ -11,8 +11,7 @@ exports.main = function ({ chorusUrl }) {
         const webChorusRoot = './web/public/chorus/'
         const outputFile = webChorusRoot + _uuid + '.mp3'
         // 处理合唱
-        const execPath = 'ffmpeg -i ' + chorusUrl   + ' -filter_complex "chorus=0.5:0.9:50|60|40:0.4|0.32|0.3:0.25|0.4|0.3:2|2.3|1.3
-" ' + outputFile
+        const execPath = 'ffmpeg -i ' + chorusUrl   + ' -filter_complex "chorus=0.5:0.9:50|60|40:0.4|0.32|0.3:0.25|0.4|0.3:2|2.3|1.3" ' + outputFile
         process(execPath).then(() => {resolve(_uuid)}).catch(() => {reject()})
 
     })
