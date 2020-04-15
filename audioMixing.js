@@ -24,7 +24,7 @@ exports.main = function ({ recordUrl, bgUrlId, startTime, durationTime }) {
                 const execPath_1 = 'ffmpeg -i '+ musicUri +' -ss '+startTime + ' -t ' + durationTime + ' -af pan="stereo|c0=c0|c1=-1*c1" -ac 1 -y ' + accompanyFile;
                 process(execPath_1).then(()=>{
                     // 混音合成
-                    const execPath_2 = 'ffmpeg -i ' + recordUrl + ' -i ' + accompanyFile +' -i ' + recordUrl + ' -filter_complex "[0:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=mono,volume=2.0[a0]; [1:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo,volume=1.5[a1]; [a0][a1]amerge=inputs=2[aout]" -map "[aout]" -ac 2  -y ' + outputFile
+                    const execPath_2 = 'ffmpeg -i ' + recordUrl + ' -i ' + accompanyFile +' -i ' + recordUrl + ' -filter_complex "[0:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=mono,volume=2.0[a0]; [1:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo,volume=1.8[a1]; [a0][a1]amerge=inputs=2[aout]; aecho=0.8:0.88:60:0.4 " -map "[aout]" -ac 2  -y ' + outputFile
                     process(execPath_2).then(() => {resolve(_uuid)}).catch(() => {reject()})
                 }).catch(()=>{reject()})
             })
